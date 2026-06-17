@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resolution — Atmospherix Jogja</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --teal:        #0cb299;
+            --teal-dark:   #098a76;
+            --teal-light:  #3cbdc9;
+            --teal-pale:   #e6f9f7;
+            --teal-mid:    #b2ece7;
+            --page-bg:     #f5faf9;
+            --white:       #ffffff;
+            --card-bg:     #ffffff;
+            --border:      #d6f0ed;
+            --text-dark:   #1a3a35;
+            --text-body:   #445550;
+            --text-muted:  #6b9490;
+            --nav-bg:      rgba(12,178,153,0.92);
+            --blue:        #2563eb;
+            --blue-pale:   #eff6ff;
+            --blue-mid:    #bfdbfe;
+            --amber:       #d97706;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--page-bg); color: var(--text-body); overflow-x: hidden; line-height: 1.6; }
+
+        /* ── Animated Blobs ── */
+        .blob-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
+        .blob { position: absolute; border-radius: 50%; opacity: 0; }
+        .blob-1 { width: 120px; height: 120px; background: radial-gradient(circle at 35% 35%, rgba(12,178,153,0.5), rgba(60,189,201,0.18) 60%, transparent 80%); animation: blobPath1 18s linear infinite; }
+        .blob-2 { width: 80px; height: 80px; background: radial-gradient(circle at 35% 35%, rgba(37,99,235,0.3), rgba(37,99,235,0.08) 60%, transparent 80%); animation: blobPath2 22s linear infinite 3s; }
+        .blob-3 { width: 55px; height: 55px; background: radial-gradient(circle at 35% 35%, rgba(12,178,153,0.55), transparent 80%); animation: blobPath3 15s linear infinite 1.5s; }
+        .blob-4 { width: 40px; height: 40px; background: radial-gradient(circle at 35% 35%, rgba(60,189,201,0.45), transparent 80%); animation: blobPath4 20s linear infinite 5s; }
+        .blob-5 { width: 65px; height: 65px; background: radial-gradient(circle at 35% 35%, rgba(12,178,153,0.35), rgba(37,99,235,0.06) 60%, transparent 80%); animation: blobPath5 26s linear infinite 8s; }
+        @keyframes blobPath1 { 0% { left:-130px; top:65%; opacity:0; transform:scale(0.7); } 5% { opacity:0.9; transform:scale(1); } 40% { left:35%; top:35%; opacity:0.65; } 80% { left:75%; top:15%; opacity:0.5; } 100% { left:110%; top:8%; opacity:0; transform:scale(0.7); } }
+        @keyframes blobPath2 { 0% { left:105%; top:25%; opacity:0; transform:scale(0.6); } 5% { opacity:0.75; transform:scale(1); } 45% { left:55%; top:60%; opacity:0.55; } 90% { left:10%; top:80%; opacity:0.4; } 100% { left:-100px; top:90%; opacity:0; transform:scale(0.6); } }
+        @keyframes blobPath3 { 0% { left:25%; top:-70px; opacity:0; transform:scale(0.5); } 8% { opacity:0.9; transform:scale(1); } 50% { left:60%; top:50%; opacity:0.65; } 100% { left:80%; top:110%; opacity:0; transform:scale(0.5); } }
+        @keyframes blobPath4 { 0% { left:75%; top:110%; opacity:0; transform:scale(0.5); } 6% { opacity:0.8; transform:scale(1); } 50% { left:30%; top:45%; opacity:0.6; } 100% { left:-55px; top:20%; opacity:0; transform:scale(0.5); } }
+        @keyframes blobPath5 { 0% { left:-80px; top:40%; opacity:0; transform:scale(0.6); } 7% { opacity:0.7; transform:scale(1); } 50% { left:50%; top:70%; opacity:0.5; } 100% { left:110%; top:55%; opacity:0; } }
+
+        /* ── Navbar ── */
+        nav { position: sticky; top: 0; z-index: 999; background: var(--nav-bg); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid rgba(255,255,255,0.15); box-shadow: 0 2px 20px rgba(12,178,153,0.2); display: flex; align-items: center; padding: 0 2rem; height: 62px; }
+        .nav-brand { display: flex; align-items: center; gap: 0.65rem; color: #fff; font-weight: 800; font-size: 0.95rem; letter-spacing: 0.5px; text-transform: uppercase; padding-right: 1.5rem; border-right: 1px solid rgba(255,255,255,0.2); margin-right: 0.5rem; }
+        .nav-brand img { width: 32px; height: 32px; border-radius: 8px; object-fit: contain; }
+        .nav-links { display: flex; gap: 0; margin: 0; padding: 0; list-style: none; }
+        .nav-links a { display: flex; align-items: center; color: rgba(255,255,255,0.8); text-decoration: none; font-size: 0.875rem; font-weight: 600; padding: 0 1.1rem; height: 62px; border-bottom: 2px solid transparent; transition: all 0.15s; }
+        .nav-links a:hover { color: #fff; background: rgba(255,255,255,0.08); }
+        .nav-right { margin-left: auto; position: relative; }
+        .nav-dropdown-btn { background: none; border: none; cursor: pointer; font-family: inherit; color: rgba(255,255,255,0.9); font-size: 0.875rem; font-weight: 700; display: flex; align-items: center; gap: 0.3rem; height: 62px; padding: 0 1.1rem; transition: all 0.15s; border-bottom: 2px solid rgba(255,255,255,0.7); }
+        .nav-dropdown-btn:hover { color: #fff; background: rgba(255,255,255,0.08); }
+        .dropdown-menu { display: none; position: absolute; right: 0; top: calc(100% + 4px); background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 0.4rem; list-style: none; min-width: 160px; box-shadow: 0 8px 30px rgba(12,178,153,0.15); z-index: 1200; }
+        .dropdown-menu.open { display: block; }
+        .dropdown-menu li a { display: block; padding: 0.55rem 1rem; color: var(--text-body); text-decoration: none; font-weight: 600; font-size: 0.83rem; border-radius: 8px; transition: all 0.15s; }
+        .dropdown-menu li a:hover, .dropdown-menu li a.active { background: var(--teal-pale); color: var(--teal-dark); }
+
+        /* ── Page Hero ── */
+        .page-hero { background: var(--white); border-bottom: 1px solid var(--border); padding: 3rem 2rem 0; position: relative; overflow: hidden; z-index: 1; }
+        .page-hero-glow { position: absolute; top: -80px; right: -80px; width: 400px; height: 400px; border-radius: 50%; background: radial-gradient(circle, rgba(12,178,153,0.1), transparent 65%); pointer-events: none; }
+        .page-hero-inner { max-width: 1280px; margin: 0 auto; position: relative; z-index: 2; }
+        .zone-kicker { display: inline-flex; align-items: center; gap: 0.45rem; font-size: 0.7rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; padding: 0.3rem 0.85rem; border-radius: 50px; margin-bottom: 0.9rem; background: var(--teal-pale); color: var(--teal-dark); border: 1px solid var(--teal-mid); }
+        .page-hero h1 { font-size: 2.4rem; font-weight: 900; color: var(--text-dark); letter-spacing: -0.5px; margin-bottom: 0.7rem; }
+        .page-hero .subtitle { font-size: 0.95rem; color: var(--text-body); max-width: 650px; line-height: 1.8; }
+        .hero-tabs { display: flex; gap: 0; margin-top: 2rem; border-top: 1px solid var(--border); }
+        .hero-tab { padding: 0.8rem 1.5rem; font-size: 0.82rem; font-weight: 700; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; text-decoration: none; transition: all 0.15s; }
+        .hero-tab.active { color: var(--teal); border-bottom-color: var(--teal); }
+        .hero-tab:hover { color: var(--teal-dark); }
+
+        /* ── Content ── */
+        .content-wrapper { max-width: 1280px; margin: 0 auto; padding: 2.5rem 2rem 4rem; position: relative; z-index: 1; }
+
+        /* ── KPI Cards ── */
+        .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+        .kpi-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 1.4rem 1.5rem; position: relative; overflow: hidden; transition: all 0.2s; box-shadow: 0 2px 12px rgba(12,178,153,0.05); }
+        .kpi-card:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(12,178,153,0.1); border-color: var(--teal-mid); }
+        .kpi-stripe { position: absolute; top: 0; left: 0; right: 0; height: 3px; border-radius: 16px 16px 0 0; }
+        .stripe-amber  { background: linear-gradient(90deg, #d97706, #fbbf24); }
+        .stripe-blue   { background: linear-gradient(90deg, #2563eb, #60a5fa); }
+        .stripe-teal   { background: linear-gradient(90deg, #0cb299, #3cbdc9); }
+        .kpi-card-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin-bottom: 0.5rem; }
+        .kpi-card-value { font-size: 1.6rem; font-weight: 900; color: var(--text-dark); line-height: 1; margin-bottom: 0.3rem; }
+        .kpi-card-sub { font-size: 0.77rem; color: var(--text-muted); }
+
+        /* ── Info Cards ── */
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+        .info-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 1.75rem; transition: all 0.2s; position: relative; overflow: hidden; box-shadow: 0 2px 12px rgba(12,178,153,0.04); }
+        .info-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--teal), var(--teal-light)); border-radius: 16px 16px 0 0; }
+        .info-card:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(12,178,153,0.1); border-color: var(--teal-mid); }
+        .info-card-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.9rem; }
+        .info-card-icon { width: 36px; height: 36px; border-radius: 9px; background: var(--teal-pale); border: 1px solid var(--teal-mid); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .info-card h3 { font-size: 0.95rem; font-weight: 800; color: var(--text-dark); }
+        .info-card p { font-size: 0.875rem; color: var(--text-body); line-height: 1.85; }
+
+        /* ── Success Box ── */
+        .success-box { background: var(--teal-pale); border: 1px solid var(--teal-mid); border-left: 4px solid var(--teal); border-radius: 14px; padding: 1.5rem 1.75rem; margin-bottom: 2rem; box-shadow: 0 2px 12px rgba(12,178,153,0.07); }
+        .success-box-header { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.6rem; }
+        .success-box h3 { color: var(--teal-dark); font-size: 0.9rem; font-weight: 800; }
+        .success-box p { color: #1a5c50; line-height: 1.8; font-size: 0.875rem; }
+
+        /* ── Reco Grid ── */
+        .reco-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+        .reco-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 1.6rem; transition: all 0.2s; position: relative; overflow: hidden; box-shadow: 0 2px 12px rgba(12,178,153,0.04); }
+        .reco-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--teal), var(--teal-light)); border-radius: 16px 16px 0 0; }
+        .reco-card:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(12,178,153,0.12); border-color: var(--teal-mid); }
+        .reco-icon { width: 44px; height: 44px; border-radius: 12px; background: var(--teal-pale); border: 1px solid var(--teal-mid); display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; }
+        .reco-card h4 { font-size: 0.95rem; font-weight: 800; color: var(--text-dark); margin-bottom: 0.5rem; }
+        .reco-card p { font-size: 0.85rem; color: var(--text-body); line-height: 1.7; }
+
+        /* ── Visual Card ── */
+        .section-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin-bottom: 0.75rem; }
+        .visual-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 18px; overflow: hidden; margin-bottom: 2rem; box-shadow: 0 4px 20px rgba(12,178,153,0.07); }
+        .visual-card-bar { display: flex; align-items: center; gap: 0.4rem; padding: 0.65rem 1.2rem; background: var(--teal-pale); border-bottom: 1px solid var(--border); }
+        .dot { width: 10px; height: 10px; border-radius: 50%; }
+        .dot-r { background: #ef4444; } .dot-y { background: #f59e0b; } .dot-g { background: #10b981; }
+        .visual-card-body { min-height: 580px; display: flex; align-items: center; justify-content: center; }
+
+        /* ── Nav Cards ── */
+        .nav-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .nav-card { background: var(--teal); border-radius: 14px; padding: 1.5rem 1.75rem; text-decoration: none; transition: all 0.2s; display: flex; justify-content: space-between; align-items: center; }
+        .nav-card:hover { background: var(--teal-dark); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(12,178,153,0.3); }
+        .nav-card-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,0.7); margin-bottom: 0.3rem; }
+        .nav-card-title { font-size: 1rem; font-weight: 800; color: #fff; }
+        .nav-card-arrow { font-size: 1.5rem; color: rgba(255,255,255,0.6); transition: transform 0.2s; }
+        .nav-card:hover .nav-card-arrow { color: #fff; }
+        .nav-card:first-child:hover .nav-card-arrow { transform: translateX(-4px); }
+        .nav-card:last-child:hover .nav-card-arrow { transform: translateX(4px); }
+
+        /* ── Footer ── */
+        footer { background: var(--teal-dark); border-top: 1px solid rgba(255,255,255,0.1); padding: 2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; position: relative; z-index: 1; }
+        .footer-brand { font-size: 0.82rem; font-weight: 800; color: rgba(255,255,255,0.9); text-transform: uppercase; letter-spacing: 1px; }
+        .footer-links { display: flex; gap: 1.5rem; }
+        .footer-links a { font-size: 0.8rem; color: rgba(255,255,255,0.7); text-decoration: none; font-weight: 600; transition: color 0.15s; }
+        .footer-links a:hover { color: #fff; }
+    </style>
+</head>
+<body>
+
+<div class="blob-canvas">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+    <div class="blob blob-4"></div>
+    <div class="blob blob-5"></div>
+</div>
+
+<nav>
+    <div class="nav-brand"><img src="Image/logo.png" alt="logo"><span>Atmospherix Jogja</span></div>
+    <ul class="nav-links"><li><a href="index.html">Beranda</a></li><li><a href="index.html#dataset">Dataset</a></li></ul>
+    <div class="nav-right">
+        <button class="nav-dropdown-btn" id="menu-dashboard" aria-haspopup="true" aria-expanded="false">Dashboard ▾</button>
+        <ul class="dropdown-menu" id="dashboard-menu" role="menu">
+            <li role="none"><a role="menuitem" href="s.html">Situation</a></li>
+            <li role="none"><a role="menuitem" href="c.html">Complication</a></li>
+            <li role="none"><a role="menuitem" href="r.html" class="active">Resolution</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="page-hero">
+    <div class="page-hero-glow"></div>
+    <div class="page-hero-inner">
+        <span class="zone-kicker">✓ 03 · Resolution</span>
+        <h1>Solusi Berbasis Data untuk Udara Sehat</h1>
+        <p class="subtitle">Solusi berbasis data — kapan waktu terbaik beraktivitas luar ruangan dan langkah mitigasi untuk melindungi kesehatan pernapasan Anda di Yogyakarta.</p>
+        <div class="hero-tabs">
+            <a href="s.html" class="hero-tab">Situation</a>
+            <a href="c.html" class="hero-tab">Complication</a>
+            <a href="r.html" class="hero-tab active">Resolution</a>
+        </div>
+    </div>
+</div>
+
+<div class="content-wrapper">
+    <!-- KPI Cards -->
+    <div class="kpi-row" style="margin-top:2rem;">
+        <div class="kpi-card">
+            <div class="kpi-stripe stripe-amber"></div>
+            <div class="kpi-card-label">Jam Udara Terbersih</div>
+            <div class="kpi-card-value">11:00–15:00</div>
+            <div class="kpi-card-sub">Waktu ideal aktivitas luar</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-stripe stripe-blue"></div>
+            <div class="kpi-card-label">Waktu Ideal Olahraga</div>
+            <div class="kpi-card-value">Siang Hari</div>
+            <div class="kpi-card-sub">Hindari dini hari & malam</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-stripe stripe-teal"></div>
+            <div class="kpi-card-label">Mitigasi Jam Rawan</div>
+            <div class="kpi-card-value">Masker</div>
+            <div class="kpi-card-sub">Perlindungan PM2.5</div>
+        </div>
+    </div>
+
+    <!-- Info Cards -->
+    <div class="info-grid">
+        <div class="info-card">
+            <div class="info-card-header">
+                <div class="info-card-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0cb299" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+                <h3>Apa yang Data Tunjukkan</h3>
+            </div>
+            <p>Analisis rata-rata konsentrasi PM2.5 per jam menunjukkan pola yang jelas: titik terendah polusi (udara paling bersih) secara konsisten terjadi pada rentang waktu siang hingga sore hari, yakni pukul 11:00 hingga 15:00. Sebaliknya, lonjakan konsentrasi polutan signifikan terjadi di luar rentang waktu tersebut.</p>
+        </div>
+        <div class="info-card">
+            <div class="info-card-header">
+                <div class="info-card-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0cb299" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+                <h3>Implikasi Praktis</h3>
+            </div>
+            <p>Data ini memberikan panduan praktis bagi masyarakat dalam mengelola aktivitas luar ruangan. Banyak orang masih terjebak pada asumsi bahwa berolahraga di pagi hari adalah pilihan paling sehat. Namun, temuan ini menyarankan sebaliknya — masyarakat sebaiknya menggeser waktu berolahraga ke jam 11:00–15:00.</p>
+        </div>
+    </div>
+
+    <!-- Success Box -->
+    <div class="success-box">
+        <div class="success-box-header">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0cb299" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            <h3>Rekomendasi Berbasis Data</h3>
+        </div>
+        <p>Kesadaran berbasis data ini adalah langkah nyata yang dapat diambil setiap individu untuk menjaga kesehatan saluran pernapasan di tengah fluktuasi kualitas udara perkotaan Yogyakarta. Dengan mengenal pola PM2.5 harian, kita bisa memilih waktu yang tepat untuk beraktivitas.</p>
+    </div>
+
+    <!-- Recommendation Grid -->
+    <div style="font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:var(--text-muted); margin-bottom:0.75rem;">Langkah Mitigasi</div>
+    <div class="reco-grid">
+        <div class="reco-card">
+            <div class="reco-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0cb299" stroke-width="2.5"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg>
+            </div>
+            <h4>Olahraga Jam 11:00–15:00</h4>
+            <p>Geser waktu olahraga ke siang hari saat konsentrasi PM2.5 di titik terendah dan udara paling jernih sepanjang hari.</p>
+        </div>
+        <div class="reco-card">
+            <div class="reco-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0cb299" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <h4>Gunakan Masker N95/KN95</h4>
+            <p>Bagi yang harus beraktivitas di jam rawan (00:00–07:00), penggunaan masker yang mampu menyaring partikel PM2.5 sangat disarankan.</p>
+        </div>
+        <div class="reco-card">
+            <div class="reco-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0cb299" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
+            </div>
+            <h4>Atur Ventilasi Rumah</h4>
+            <p>Buka jendela rumah pada jam 11:00–15:00 untuk sirkulasi udara bersih, dan tutup rapat saat malam hingga pagi hari untuk mencegah PM2.5 masuk.</p>
+        </div>
+    </div>
+
+    <!-- Tableau Dashboard -->
+    <div class="section-label">Resolution Dashboard — Tableau</div>
+    <div class="visual-card">
+        <div class="visual-card-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
+        <div class="visual-card-body">
+            <div class='tableauPlaceholder' id='viz1781706345128' style='position: relative'><noscript><a href='#'><img alt='Rekomendasi Waktu Beraktivitas ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;da&#47;dashboard3_17817062741010&#47;Dashboard3&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='dashboard3_17817062741010&#47;Dashboard3' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;da&#47;dashboard3_17817062741010&#47;Dashboard3&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='en-US' /><param name='filter' value='publish=yes' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1781706345128');                    var vizElement = divElement.getElementsByTagName('object')[0];                    if ( divElement.offsetWidth > 800 ) { vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';} else if ( divElement.offsetWidth > 500 ) { vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';} else { vizElement.style.width='100%';vizElement.style.height='727px';}                     var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>
+        </div>
+    </div>
+
+    <!-- Nav Cards -->
+    <div class="nav-cards">
+        <a href="s.html" class="nav-card"><div><div class="nav-card-label">Kembali ke</div><div class="nav-card-title">Situation</div></div><div class="nav-card-arrow">←</div></a>
+        <a href="c.html" class="nav-card"><div><div class="nav-card-label">Kembali ke</div><div class="nav-card-title">Complication</div></div><div class="nav-card-arrow">←</div></a>
+    </div>
+</div>
+
+<footer>
+    <div class="footer-brand">Atmospherix Jogja</div>
+    <div class="footer-links">
+        <a href="index.html">Beranda</a>
+        <a href="s.html">Situation</a>
+        <a href="c.html">Complication</a>
+    </div>
+</footer>
+
+<script>
+(function(){
+    const btn=document.getElementById('menu-dashboard'), menu=document.getElementById('dashboard-menu');
+    btn.addEventListener('click', e => { e.preventDefault(); const o=btn.getAttribute('aria-expanded')==='true'; btn.setAttribute('aria-expanded',String(!o)); menu.classList.toggle('open',!o); });
+    document.addEventListener('click', e => { if(!btn.contains(e.target)&&!menu.contains(e.target)){btn.setAttribute('aria-expanded','false');menu.classList.remove('open');} });
+    document.addEventListener('keydown', e => { if(e.key==='Escape'){btn.setAttribute('aria-expanded','false');menu.classList.remove('open');} });
+})();
+</script>
+</body>
+</html>

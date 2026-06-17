@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atmospherix Jogja — Analisis Kualitas Udara DIY 2021</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --teal:        #0cb299;
+            --teal-dark:   #098a76;
+            --teal-light:  #3cbdc9;
+            --teal-pale:   #e6f9f7;
+            --teal-mid:    #b2ece7;
+            --page-bg:     #f5faf9;
+            --white:       #ffffff;
+            --card-bg:     #ffffff;
+            --border:      #d6f0ed;
+            --text-dark:   #1a3a35;
+            --text-body:   #445550;
+            --text-muted:  #6b9490;
+            --amber:       #f59e0b;
+            --red:         #ef4444;
+            --blue:        #3b82f6;
+            --nav-bg:      rgba(12, 178, 153, 0.92);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; scroll-padding-top: 62px; }
+        body { font-family: 'Inter', sans-serif; background: var(--page-bg); color: var(--text-body); overflow-x: hidden; line-height: 1.6; }
+
+        /* ═══════════════════════════════════ ANIMATED BLOBS ═══════════════════════════════════ */
+        .blob-canvas {
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none; z-index: 0; overflow: hidden;
+        }
+        .blob {
+            position: absolute; border-radius: 50%;
+            filter: blur(0px); opacity: 0;
+        }
+        /* Blob 1 — large teal */
+        .blob-1 {
+            width: 110px; height: 110px;
+            background: radial-gradient(circle at 35% 35%, rgba(12,178,153,0.55), rgba(60,189,201,0.25) 60%, transparent 80%);
+            animation: blobPath1 18s linear infinite;
+        }
+        /* Blob 2 — medium lighter */
+        .blob-2 {
+            width: 75px; height: 75px;
+            background: radial-gradient(circle at 35% 35%, rgba(60,189,201,0.5), rgba(12,178,153,0.2) 60%, transparent 80%);
+            animation: blobPath2 22s linear infinite 3s;
+        }
+        /* Blob 3 — small fast */
+        .blob-3 {
+            width: 50px; height: 50px;
+            background: radial-gradient(circle at 35% 35%, rgba(12,178,153,0.6), rgba(11,178,153,0.15) 60%, transparent 80%);
+            animation: blobPath3 15s linear infinite 1.5s;
+        }
+        /* Blob 4 — tiny accent */
+        .blob-4 {
+            width: 35px; height: 35px;
+            background: radial-gradient(circle at 35% 35%, rgba(245,158,11,0.45), rgba(245,158,11,0.1) 60%, transparent 80%);
+            animation: blobPath4 25s linear infinite 6s;
+        }
+        /* Blob 5 — medium blue */
+        .blob-5 {
+            width: 65px; height: 65px;
+            background: radial-gradient(circle at 35% 35%, rgba(59,130,246,0.35), rgba(59,130,246,0.08) 60%, transparent 80%);
+            animation: blobPath5 20s linear infinite 8s;
+        }
+        /* Blob 6 — small teal */
+        .blob-6 {
+            width: 45px; height: 45px;
+            background: radial-gradient(circle at 35% 35%, rgba(12,178,153,0.5), rgba(60,189,201,0.1) 60%, transparent 80%);
+            animation: blobPath6 17s linear infinite 4s;
+        }
+
+        @keyframes blobPath1 {
+            0%   { left: -120px; top: 70%; opacity: 0; transform: scale(0.7); }
+            5%   { opacity: 0.9; transform: scale(1); }
+            30%  { left: 25%; top: 40%; }
+            60%  { left: 60%; top: 20%; opacity: 0.7; }
+            95%  { opacity: 0.5; transform: scale(0.85); }
+            100% { left: 110%; top: 10%; opacity: 0; transform: scale(0.7); }
+        }
+        @keyframes blobPath2 {
+            0%   { left: 110%; top: 20%; opacity: 0; transform: scale(0.6); }
+            5%   { opacity: 0.85; transform: scale(1); }
+            35%  { left: 65%; top: 55%; }
+            65%  { left: 30%; top: 75%; opacity: 0.65; }
+            95%  { opacity: 0.4; transform: scale(0.8); }
+            100% { left: -90px; top: 85%; opacity: 0; transform: scale(0.6); }
+        }
+        @keyframes blobPath3 {
+            0%   { left: 20%; top: -70px; opacity: 0; transform: scale(0.5); }
+            8%   { opacity: 1; transform: scale(1); }
+            40%  { left: 50%; top: 45%; }
+            80%  { left: 75%; top: 80%; opacity: 0.7; }
+            95%  { opacity: 0.3; transform: scale(0.75); }
+            100% { left: 85%; top: 110%; opacity: 0; transform: scale(0.5); }
+        }
+        @keyframes blobPath4 {
+            0%   { left: 80%; top: 110%; opacity: 0; transform: scale(0.5); }
+            6%   { opacity: 0.8; transform: scale(1); }
+            40%  { left: 40%; top: 60%; }
+            75%  { left: 15%; top: 30%; opacity: 0.6; }
+            95%  { opacity: 0.3; }
+            100% { left: -50px; top: 15%; opacity: 0; transform: scale(0.5); }
+        }
+        @keyframes blobPath5 {
+            0%   { left: -80px; top: 30%; opacity: 0; transform: scale(0.6); }
+            7%   { opacity: 0.7; transform: scale(1); }
+            45%  { left: 55%; top: 65%; }
+            85%  { left: 90%; top: 50%; opacity: 0.5; }
+            100% { left: 110%; top: 45%; opacity: 0; }
+        }
+        @keyframes blobPath6 {
+            0%   { left: 50%; top: -60px; opacity: 0; transform: scale(0.5); }
+            8%   { opacity: 0.85; transform: scale(1); }
+            50%  { left: 20%; top: 55%; }
+            90%  { left: 5%; top: 90%; opacity: 0.45; }
+            100% { left: -60px; top: 100%; opacity: 0; }
+        }
+
+        /* ═══════════════════════════════════ NAVBAR ═══════════════════════════════════ */
+        nav {
+            position: sticky; top: 0; z-index: 999;
+            background: var(--nav-bg);
+            backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+            box-shadow: 0 2px 20px rgba(12,178,153,0.2);
+            display: flex; align-items: center;
+            padding: 0 2rem; height: 62px;
+        }
+        .nav-brand {
+            display: flex; align-items: center; gap: 0.65rem;
+            color: #fff; font-weight: 800; font-size: 0.95rem;
+            letter-spacing: 0.5px; text-transform: uppercase;
+            padding-right: 1.5rem;
+            border-right: 1px solid rgba(255,255,255,0.2);
+            margin-right: 0.5rem;
+        }
+        .nav-brand img { width: 32px; height: 32px; border-radius: 8px; object-fit: contain; }
+        .nav-links { display: flex; gap: 0; margin: 0; padding: 0; list-style: none; }
+        .nav-links a {
+            display: flex; align-items: center;
+            color: rgba(255,255,255,0.8); text-decoration: none;
+            font-size: 0.875rem; font-weight: 600;
+            padding: 0 1.1rem; height: 62px;
+            border-bottom: 2px solid transparent;
+            transition: all 0.15s;
+        }
+        .nav-links a:hover { color: #fff; background: rgba(255,255,255,0.08); }
+        .nav-links a.active { color: #fff; border-bottom-color: rgba(255,255,255,0.7); }
+        .nav-right { margin-left: auto; position: relative; }
+        .nav-dropdown-btn {
+            background: none; border: none; cursor: pointer; font-family: inherit;
+            color: rgba(255,255,255,0.8); font-size: 0.875rem; font-weight: 600;
+            display: flex; align-items: center; gap: 0.3rem; height: 62px; padding: 0 1.1rem;
+            transition: all 0.15s;
+        }
+        .nav-dropdown-btn:hover, .nav-dropdown-btn.open { color: #fff; background: rgba(255,255,255,0.08); }
+        .dropdown-menu {
+            display: none; position: absolute; right: 0; top: calc(100% + 4px);
+            background: #fff; border: 1px solid var(--border);
+            border-radius: 12px; padding: 0.4rem; list-style: none; min-width: 160px;
+            box-shadow: 0 8px 30px rgba(12,178,153,0.15); z-index: 1200;
+        }
+        .dropdown-menu.open { display: block; }
+        .dropdown-menu li a {
+            display: block; padding: 0.55rem 1rem;
+            color: var(--text-body); text-decoration: none; font-weight: 600; font-size: 0.83rem;
+            border-radius: 8px; transition: all 0.15s;
+        }
+        .dropdown-menu li a:hover, .dropdown-menu li a.active { background: var(--teal-pale); color: var(--teal-dark); }
+
+        /* ═══════════════════════════════════ HERO ═══════════════════════════════════ */
+        .hero {
+            position: relative; min-height: 91vh;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            text-align: center; overflow: hidden;
+        }
+        .hero-bg-img {
+            position: absolute; inset: 0;
+            background: url('Image/background.png') center center / cover no-repeat;
+            opacity: 0.22;
+        }
+        .hero-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(160deg, rgba(12,178,153,0.55) 0%, rgba(9,138,118,0.35) 40%, rgba(245,250,249,0.92) 100%);
+        }
+        .hero-content { position: relative; z-index: 2; padding: 2rem; max-width: 800px; }
+        .hero-kicker {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            background: rgba(255,255,255,0.85); backdrop-filter: blur(8px);
+            border: 1px solid rgba(12,178,153,0.3); color: var(--teal-dark);
+            padding: 0.4rem 1.1rem; border-radius: 50px;
+            font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 12px rgba(12,178,153,0.15);
+        }
+        .hero-kicker-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--teal); animation: dotPulse 2s ease-in-out infinite; }
+        @keyframes dotPulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.5); opacity: 0.5; } }
+        .hero h1 {
+            font-size: clamp(2.2rem, 5vw, 3.8rem); font-weight: 900;
+            line-height: 1.1; letter-spacing: -1px; margin-bottom: 1.2rem;
+            color: var(--text-dark);
+        }
+        .hero h1 em {
+            font-style: normal; color: var(--teal);
+        }
+        .hero p {
+            font-size: 1.1rem; color: var(--text-body);
+            max-width: 580px; margin: 0 auto 2.5rem; line-height: 1.8;
+        }
+        .hero-cta {
+            display: inline-flex; align-items: center; gap: 0.6rem;
+            background: var(--teal); color: #fff;
+            padding: 0.9rem 2.2rem; border-radius: 50px;
+            text-decoration: none; font-weight: 700; font-size: 0.95rem;
+            transition: all 0.2s; box-shadow: 0 6px 24px rgba(12,178,153,0.35);
+        }
+        .hero-cta:hover { background: var(--teal-dark); transform: translateY(-2px); box-shadow: 0 10px 32px rgba(12,178,153,0.5); }
+        .hero-scroll { position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%); z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
+        .hero-scroll span { font-size: 0.68rem; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; }
+        .scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--teal), transparent); animation: scrollAnim 2s ease-in-out infinite; }
+        @keyframes scrollAnim { 0% { transform: scaleY(0); transform-origin: top; } 50% { transform: scaleY(1); transform-origin: top; } 51% { transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
+
+        /* ═══════════════════════════════════ SECTIONS ═══════════════════════════════════ */
+        .section-wrap { background: var(--white); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        .zone { padding: 4.5rem 2rem; max-width: 1280px; margin: 0 auto; position: relative; z-index: 1; }
+
+        .zone-kicker {
+            display: inline-flex; align-items: center; gap: 0.45rem;
+            font-size: 0.7rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
+            padding: 0.3rem 0.85rem; border-radius: 50px; margin-bottom: 0.9rem;
+            background: var(--teal-pale); color: var(--teal-dark); border: 1px solid var(--teal-mid);
+        }
+        .zone-heading { font-size: 2rem; font-weight: 900; color: var(--text-dark); letter-spacing: -0.5px; margin-bottom: 0.7rem; }
+        .zone-desc { color: var(--text-body); line-height: 1.85; font-size: 0.97rem; max-width: 680px; margin-bottom: 2.5rem; }
+
+        /* ═══════════════════════════════════ KPI CARDS ═══════════════════════════════════ */
+        .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+        .kpi-card {
+            background: var(--card-bg); border: 1px solid var(--border);
+            border-radius: 16px; padding: 1.4rem 1.5rem;
+            position: relative; overflow: hidden; transition: all 0.2s;
+            box-shadow: 0 2px 12px rgba(12,178,153,0.04);
+        }
+        .kpi-card:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(12,178,153,0.1); border-color: var(--teal-mid); }
+        .kpi-stripe { position: absolute; top: 0; left: 0; right: 0; height: 3px; border-radius: 16px 16px 0 0; }
+        .stripe-teal   { background: linear-gradient(90deg, #0cb299, #3cbdc9); }
+        .stripe-blue   { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+        .stripe-purple { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
+        .stripe-amber  { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+        .kpi-card-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin-bottom: 0.5rem; }
+        .kpi-card-value { font-size: 1.6rem; font-weight: 900; color: var(--text-dark); line-height: 1; margin-bottom: 0.3rem; }
+        .kpi-card-sub { font-size: 0.77rem; color: var(--text-muted); }
+
+        /* ═══════════════════════════════════ DATASET CARDS ═══════════════════════════════════ */
+        .dataset-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+        .dataset-card {
+            background: var(--card-bg); border: 1px solid var(--border);
+            border-radius: 16px; padding: 1.75rem;
+            transition: all 0.2s; position: relative; overflow: hidden;
+            box-shadow: 0 2px 12px rgba(12,178,153,0.04);
+        }
+        .dataset-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--teal), var(--teal-light)); border-radius: 16px 16px 0 0; }
+        .dataset-card:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(12,178,153,0.12); border-color: var(--teal-mid); }
+        .dataset-card-icon {
+            width: 40px; height: 40px; border-radius: 10px;
+            background: var(--teal-pale); border: 1px solid var(--teal-mid);
+            display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;
+        }
+        .dataset-card h4 { font-size: 0.95rem; font-weight: 800; color: var(--text-dark); margin-bottom: 0.75rem; }
+        .dataset-card ul { list-style: none; }
+        .dataset-card ul li {
+            font-size: 0.855rem; color: var(--text-body); padding: 0.35rem 0;
+            border-bottom: 1px solid var(--border);
+            display: flex; gap: 0.5rem; align-items: flex-start; line-height: 1.6;
+        }
+        .dataset-card ul li::before { content: '·'; color: var(--teal); font-size: 1.1rem; flex-shrink: 0; line-height: 1.4; }
+        .dataset-card ul li:last-child { border-bottom: none; }
+
+        /* ═══════════════════════════════════ DASH NAV CARDS ═══════════════════════════════════ */
+        .dash-nav-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 0.5rem; }
+        @media (max-width: 768px) { .dash-nav-grid { grid-template-columns: 1fr; } }
+        .dash-nav-card {
+            background: var(--card-bg); border: 1px solid var(--border);
+            border-radius: 18px; padding: 2rem;
+            text-decoration: none; transition: all 0.25s;
+            position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 0.4rem;
+            box-shadow: 0 2px 12px rgba(12,178,153,0.04);
+        }
+        .dash-nav-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; border-radius: 18px 18px 0 0; opacity: 0; transition: opacity 0.2s; }
+        .dnc-s::before { background: linear-gradient(90deg, #0cb299, #3cbdc9); }
+        .dnc-c::before { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+        .dnc-r::before { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+        .dash-nav-card:hover { transform: translateY(-4px); box-shadow: 0 14px 40px rgba(12,178,153,0.12); border-color: var(--teal-mid); }
+        .dash-nav-card:hover::before { opacity: 1; }
+        .dnc-badge {
+            font-size: 0.65rem; font-weight: 800; text-transform: uppercase;
+            letter-spacing: 1.5px; padding: 0.25rem 0.65rem;
+            border-radius: 6px; display: inline-block; width: fit-content; margin-bottom: 0.5rem;
+        }
+        .dnc-s .dnc-badge { background: var(--teal-pale); color: var(--teal-dark); }
+        .dnc-c .dnc-badge { background: rgba(245,158,11,0.1); color: #92400e; }
+        .dnc-r .dnc-badge { background: rgba(59,130,246,0.1); color: #1d4ed8; }
+        .dnc-title { font-size: 1.2rem; font-weight: 900; color: var(--text-dark); }
+        .dnc-desc { font-size: 0.83rem; color: var(--text-body); line-height: 1.65; }
+        .dnc-arrow { margin-top: auto; padding-top: 1rem; font-size: 0.82rem; font-weight: 700; display: flex; align-items: center; gap: 0.3rem; transition: gap 0.2s; }
+        .dnc-s .dnc-arrow { color: var(--teal); }
+        .dnc-c .dnc-arrow { color: #d97706; }
+        .dnc-r .dnc-arrow { color: #2563eb; }
+        .dash-nav-card:hover .dnc-arrow { gap: 0.6rem; }
+
+        /* ═══════════════════════════════════ BUTTON ═══════════════════════════════════ */
+        .btn-primary {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            background: var(--teal); color: #fff;
+            padding: 0.75rem 1.75rem; border-radius: 10px;
+            text-decoration: none; font-weight: 700; font-size: 0.875rem;
+            transition: all 0.2s; box-shadow: 0 4px 16px rgba(12,178,153,0.25);
+        }
+        .btn-primary:hover { background: var(--teal-dark); transform: translateY(-1px); box-shadow: 0 8px 24px rgba(12,178,153,0.35); }
+
+        /* ═══════════════════════════════════ FOOTER ═══════════════════════════════════ */
+        footer {
+            background: var(--teal-dark);
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding: 2rem 2rem;
+            display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+            position: relative; z-index: 1;
+        }
+        .footer-brand { font-size: 0.82rem; font-weight: 800; color: rgba(255,255,255,0.9); text-transform: uppercase; letter-spacing: 1px; }
+        .footer-links { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+        .footer-links a { font-size: 0.8rem; color: rgba(255,255,255,0.7); text-decoration: none; font-weight: 600; transition: color 0.15s; }
+        .footer-links a:hover { color: #fff; }
+        .footer-note { font-size: 0.75rem; color: rgba(255,255,255,0.5); width: 100%; }
+    </style>
+</head>
+<body>
+
+<!-- Animated Blobs -->
+<div class="blob-canvas">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+    <div class="blob blob-4"></div>
+    <div class="blob blob-5"></div>
+    <div class="blob blob-6"></div>
+</div>
+
+<!-- Navbar -->
+<nav id="home">
+    <div class="nav-brand">
+        <img src="Image/logo.png" alt="logo">
+        <span>Atmospherix Jogja</span>
+    </div>
+    <ul class="nav-links">
+        <li><a href="#home" class="active" id="nav-beranda">Beranda</a></li>
+        <li><a href="#dataset" id="nav-dataset">Dataset</a></li>
+    </ul>
+    <div class="nav-right">
+        <button class="nav-dropdown-btn" id="menu-dashboard" aria-haspopup="true" aria-expanded="false">
+            Dashboard <span>▾</span>
+        </button>
+        <ul class="dropdown-menu" id="dashboard-menu" role="menu">
+            <li role="none"><a role="menuitem" href="s.html">Situation</a></li>
+            <li role="none"><a role="menuitem" href="c.html">Complication</a></li>
+            <li role="none"><a role="menuitem" href="r.html">Resolution</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero" id="hero-section">
+    <div class="hero-bg-img"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <div class="hero-kicker">
+            <div class="hero-kicker-dot"></div>
+            Analisis Kualitas Udara DIY 2021
+        </div>
+        <h1>Napas Jogja 2021:<br><em>Menelusuri Jejak Polusi</em><br>di Kota Budaya</h1>
+        <p>Sebuah narasi data tentang kualitas udara di Yogyakarta sepanjang tahun 2021 — mengungkap dinamika atmosfer di balik keelokan visual kota.</p>
+        <a href="#dataset" class="hero-cta">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            Jelajahi Data
+        </a>
+    </div>
+    <div class="hero-scroll">
+        <span>Scroll</span>
+        <div class="scroll-line"></div>
+    </div>
+</section>
+
+<!-- Zone 1: Dataset -->
+<div class="section-wrap">
+<section class="zone" id="dataset">
+    <span class="zone-kicker">Setup · Dataset Overview</span>
+    <h2 class="zone-heading">Karakteristik Data Kualitas Udara Yogyakarta</h2>
+    <p class="zone-desc">Sebagai kota pendidikan dan destinasi wisata utama, Yogyakarta mengalami lonjakan aktivitas urbanisasi yang pesat. Analisis ini dibangun menggunakan data sekunder deret waktu (time-series) untuk membedah pola pencemaran secara akurat.</p>
+
+    <div class="kpi-row">
+        <div class="kpi-card"><div class="kpi-stripe stripe-teal"></div><div class="kpi-card-label">Rentang Data</div><div class="kpi-card-value">2021</div><div class="kpi-card-sub">Jan – Des · 365 Hari</div></div>
+        <div class="kpi-card"><div class="kpi-stripe stripe-blue"></div><div class="kpi-card-label">Frekuensi</div><div class="kpi-card-value">Hourly</div><div class="kpi-card-sub">Time-Series per Jam</div></div>
+        <div class="kpi-card"><div class="kpi-stripe stripe-purple"></div><div class="kpi-card-label">Wilayah Studi</div><div class="kpi-card-value">Jogja</div><div class="kpi-card-sub">Kota Yogyakarta, DIY</div></div>
+        <div class="kpi-card"><div class="kpi-stripe stripe-amber"></div><div class="kpi-card-label">Sumber Data</div><div class="kpi-card-value">Kaggle</div><div class="kpi-card-sub">Open Dataset Platform</div></div>
+    </div>
+
+    <div class="dataset-grid">
+        <div class="dataset-card">
+            <div class="dataset-card-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0cb299" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </div>
+            <h4>Atribut Komponen Polutan</h4>
+            <ul>
+                <li><strong>PM2.5</strong> — Partikel debu mikro &lt; 2.5 µm, paling berbahaya bagi pernapasan.</li>
+                <li><strong>CO (Karbon Monoksida)</strong> — Gas beracun dari sisa asap kendaraan bermotor.</li>
+                <li><strong>O₃ &amp; NO₂</strong> — Polutan sekunder dari aktivitas industri dan urban.</li>
+            </ul>
+        </div>
+        <div class="dataset-card">
+            <div class="dataset-card-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0cb299" stroke-width="2.5"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"/></svg>
+            </div>
+            <h4>Detail Teknis Data</h4>
+            <ul>
+                <li><strong>Rentang Waktu:</strong> Januari – Desember 2021 (Full 1 Tahun).</li>
+                <li><strong>Frekuensi:</strong> Pencatatan berkala berbasis jam (Hourly).</li>
+                <li><strong>Sumber:</strong> Platform sains data global (Kaggle).</li>
+                <li><strong>Metode:</strong> Pembersihan data null via Google Colab.</li>
+            </ul>
+        </div>
+    </div>
+
+    <a href="https://www.kaggle.com/datasets/adhang/air-quality-in-yogyakarta-indonesia-2021" target="_blank" class="btn-primary">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Kunjungi Sumber Dataset di Kaggle
+    </a>
+</section>
+</div>
+
+<!-- Zone 2: Dashboard Navigation -->
+<section class="zone">
+    <span class="zone-kicker">Narasi Data · Dashboard Interaktif</span>
+    <h2 class="zone-heading">Eksplorasi Analisis SCR</h2>
+    <p class="zone-desc">Analisis data disajikan dalam kerangka narasi SCR — Situation, Complication, Resolution — untuk menyajikan insight yang terstruktur dan mudah dipahami.</p>
+    <div class="dash-nav-grid">
+        <a href="s.html" class="dash-nav-card dnc-s">
+            <span class="dnc-badge">01 · Situation</span>
+            <div class="dnc-title">Kondisi Normal</div>
+            <div class="dnc-desc">Memahami baseline kualitas udara Yogyakarta sebagai fondasi analisis — seperti apa kondisi "normal" itu.</div>
+            <div class="dnc-arrow">Buka Dashboard →</div>
+        </a>
+        <a href="c.html" class="dash-nav-card dnc-c">
+            <span class="dnc-badge">02 · Complication</span>
+            <div class="dnc-title">Ancaman Tersembunyi</div>
+            <div class="dnc-desc">Mengungkap PM2.5 sebagai polutan paling kritis yang memuncak di jam-jam tak terduga.</div>
+            <div class="dnc-arrow">Buka Dashboard →</div>
+        </a>
+        <a href="r.html" class="dash-nav-card dnc-r">
+            <span class="dnc-badge">03 · Resolution</span>
+            <div class="dnc-title">Solusi Berbasis Data</div>
+            <div class="dnc-desc">Panduan waktu terbaik beraktivitas luar ruangan dan langkah mitigasi untuk kesehatan.</div>
+            <div class="dnc-arrow">Buka Dashboard →</div>
+        </a>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <div class="footer-brand">Atmospherix Jogja</div>
+    <div class="footer-links">
+        <a href="#dataset">Dataset</a>
+        <a href="s.html">Situation</a>
+        <a href="c.html">Complication</a>
+        <a href="r.html">Resolution</a>
+        <a href="https://www.kaggle.com/datasets/adhang/air-quality-in-yogyakarta-indonesia-2021" target="_blank">Kaggle ↗</a>
+    </div>
+    <div class="footer-note">Dataset: Air Quality in Yogyakarta Indonesia 2021 &nbsp;·&nbsp; Powered by Tableau Public &nbsp;·&nbsp; Analisis Visualisasi Data</div>
+</footer>
+
+<script>
+    const navBeranda = document.getElementById('nav-beranda');
+    const navDataset = document.getElementById('nav-dataset');
+    const datasetEl  = document.getElementById('dataset');
+    function updateNav() {
+        if (window.scrollY < 80) { navBeranda.classList.add('active'); navDataset.classList.remove('active'); }
+        else if (datasetEl && window.scrollY >= datasetEl.offsetTop - 200) { navDataset.classList.add('active'); navBeranda.classList.remove('active'); }
+        else { navBeranda.classList.add('active'); navDataset.classList.remove('active'); }
+    }
+    window.addEventListener('scroll', updateNav);
+    window.addEventListener('load', updateNav);
+
+    const dashBtn = document.getElementById('menu-dashboard');
+    const dashMenu = document.getElementById('dashboard-menu');
+    dashBtn.addEventListener('click', e => { e.preventDefault(); const o=dashBtn.getAttribute('aria-expanded')==='true'; dashBtn.setAttribute('aria-expanded',String(!o)); dashMenu.classList.toggle('open',!o); dashBtn.classList.toggle('open',!o); });
+    document.addEventListener('click', e => { if (!dashBtn.contains(e.target)&&!dashMenu.contains(e.target)){dashBtn.setAttribute('aria-expanded','false');dashMenu.classList.remove('open');dashBtn.classList.remove('open');} });
+    document.addEventListener('keydown', e => { if(e.key==='Escape'){dashBtn.setAttribute('aria-expanded','false');dashMenu.classList.remove('open');dashBtn.classList.remove('open');} });
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', e => { e.preventDefault(); const t=document.querySelector(a.getAttribute('href')); if(t) t.scrollIntoView({behavior:'smooth'}); });
+    });
+</script>
+</body>
+</html>
